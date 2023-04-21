@@ -1,4 +1,4 @@
-package com.daiwenzh5.kt.time.json
+package io.github.daiwenzh5.kt.time.json
 
 /**
  * 反序列化异常

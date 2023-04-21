@@ -1,4 +1,4 @@
-package com.daiwenzh5.kt.time
+package io.github.daiwenzh5.kt.time
 
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit

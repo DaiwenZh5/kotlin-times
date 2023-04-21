@@ -1,9 +1,9 @@
-package com.daiwenzh5.kt.time
+package io.github.daiwenzh5.kt.time
 
-import com.daiwenzh5.kt.time.json.DateRangeDeserializer
-import com.daiwenzh5.kt.time.json.DateRangeSerializer
-import com.daiwenzh5.kt.time.json.DateTimeRangeDeserializer
-import com.daiwenzh5.kt.time.json.DateTimeRangeSerializer
+import io.github.daiwenzh5.kt.time.json.DateRangeDeserializer
+import io.github.daiwenzh5.kt.time.json.DateRangeSerializer
+import io.github.daiwenzh5.kt.time.json.DateTimeRangeDeserializer
+import io.github.daiwenzh5.kt.time.json.DateTimeRangeSerializer
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.io.Serializable
@@ -20,13 +20,13 @@ import java.time.temporal.TemporalAdjusters
  */
 // ================================================================================================
 
-sealed class Range<T>(open val start: T, open val end: T) : Serializable {
+sealed class TimeRange<T>(open val start: T, open val end: T) : Serializable {
     override fun toString() = "[$start,$end]"
 
     fun toPair(): Pair<T, T> = Pair(start, end)
 
     override fun equals(other: Any?): Boolean {
-        if (other is Range<*>) {
+        if (other is TimeRange<*>) {
             return (other.start == start) && (other.end == end)
         }
         return super.equals(other)
@@ -42,12 +42,12 @@ sealed class Range<T>(open val start: T, open val end: T) : Serializable {
 
 @JsonDeserialize(using = DateTimeRangeDeserializer::class)
 @JsonSerialize(using = DateTimeRangeSerializer::class)
-class DateTimeRange(override val start: LocalDateTime, override val end: LocalDateTime) :
-    Range<LocalDateTime>(start, end)
+class DateTimeTimeRange(override val start: LocalDateTime, override val end: LocalDateTime) :
+    TimeRange<LocalDateTime>(start, end)
 
 @JsonDeserialize(using = DateRangeDeserializer::class)
 @JsonSerialize(using = DateRangeSerializer::class)
-data class DateRange(override val start: LocalDate, override val end: LocalDate) : Range<LocalDate>(start, end)
+data class DateRange(override val start: LocalDate, override val end: LocalDate) : TimeRange<LocalDate>(start, end)
 
 /**
  * 一天的开始时间
@@ -62,7 +62,7 @@ val LocalDateTime.endOfDay: LocalDateTime get() = this.with(LocalTime.MAX)
 /**
  * 一天的开始时间和结束时间范围
  */
-val LocalDateTime.rangeOfDay: DateTimeRange get() = this.startOfDay.let { DateTimeRange(it, it.endOfDay) }
+val LocalDateTime.rangeOfDay: DateTimeTimeRange get() = this.startOfDay.let { DateTimeTimeRange(it, it.endOfDay) }
 
 /**
  * 按天修正时间范围。
@@ -71,7 +71,7 @@ val LocalDateTime.rangeOfDay: DateTimeRange get() = this.startOfDay.let { DateTi
  *
  * @return 起始日期的 00:00:00 和 结束日期的 23:59:59。
  */
-fun DateTimeRange.fixedOfDay(): DateTimeRange = DateTimeRange(start.startOfDay, end.endOfDay)
+fun DateTimeTimeRange.fixedOfDay(): DateTimeTimeRange = DateTimeTimeRange(start.startOfDay, end.endOfDay)
 
 
 /**
@@ -89,7 +89,7 @@ val LocalDateTime.endOfMonth: LocalDateTime
 /**
  * 当月的开始时间和结束时间范围
  */
-val LocalDateTime.rangeOfMonth: DateTimeRange get() = this.startOfMonth.let { DateTimeRange(it, it.endOfMonth) }
+val LocalDateTime.rangeOfMonth: DateTimeTimeRange get() = this.startOfMonth.let { DateTimeTimeRange(it, it.endOfMonth) }
 
 /**
  * 按月修正时间范围。
@@ -98,7 +98,7 @@ val LocalDateTime.rangeOfMonth: DateTimeRange get() = this.startOfMonth.let { Da
  *
  * @return 当月 1 日的 00:00:00 和 当月最后一日的 23:59:59。
  */
-fun DateTimeRange.fixedOfMonth(): DateTimeRange = DateTimeRange(start.startOfMonth, end.endOfMonth)
+fun DateTimeTimeRange.fixedOfMonth(): DateTimeTimeRange = DateTimeTimeRange(start.startOfMonth, end.endOfMonth)
 
 /**
  * 一天的开始时间
@@ -117,7 +117,7 @@ val LocalDate.endOfDay: LocalDateTime get() = LocalDateTime.of(this, LocalTime.M
  *
  * @return 起始日期的 00:00:00 和 结束日期的 23:59:59。
  */
-fun DateRange.fixedOfDay(): DateTimeRange = DateTimeRange(start.startOfDay, end.endOfDay)
+fun DateRange.fixedOfDay(): DateTimeTimeRange = DateTimeTimeRange(start.startOfDay, end.endOfDay)
 
 /**
  * 当月的开始时间
@@ -132,7 +132,7 @@ val LocalDate.endOfMonth: LocalDateTime get() = this.startOfDay.endOfMonth
 /**
  * 当月的开始时间和结束时间范围
  */
-val LocalDate.rangeOfMonth: DateTimeRange get() = this.startOfMonth.let { DateTimeRange(it, it.endOfMonth) }
+val LocalDate.rangeOfMonth: DateTimeTimeRange get() = this.startOfMonth.let { DateTimeTimeRange(it, it.endOfMonth) }
 
 
 /**
@@ -142,4 +142,4 @@ val LocalDate.rangeOfMonth: DateTimeRange get() = this.startOfMonth.let { DateTi
  *
  * @return 当月 1 日的 00:00:00 和 当月最后一日的 23:59:59。
  */
-fun DateRange.fixedOfMonth(): DateTimeRange = DateTimeRange(start.startOfMonth, end.endOfMonth)
+fun DateRange.fixedOfMonth(): DateTimeTimeRange = DateTimeTimeRange(start.startOfMonth, end.endOfMonth)

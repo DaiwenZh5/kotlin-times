@@ -1,8 +1,8 @@
-package com.daiwenzh5.kt.time.json
+package io.github.daiwenzh5.kt.time.json
 
-import com.daiwenzh5.kt.time.DateRange
-import com.daiwenzh5.kt.time.DateTimeRange
-import com.daiwenzh5.kt.time.Range
+import io.github.daiwenzh5.kt.time.DateRange
+import io.github.daiwenzh5.kt.time.DateTimeTimeRange
+import io.github.daiwenzh5.kt.time.TimeRange
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
@@ -23,11 +23,11 @@ import java.time.LocalDateTime
 /**
  * 日期时间范围
  */
-abstract class RangeDeserializer<T, R : Range<T>> : JsonDeserializer<R>() {
+abstract class RangeDeserializer<T, R : TimeRange<T>> : JsonDeserializer<R>() {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): R {
         val array = p.readValueAs(getType())
         if (array.isEmpty()) {
-            throw TimeConvertException("Range must contain at least one value!")
+            throw TimeConvertException("TimeRange must contain at least one value!")
         }
         return create(array[0], if (array.size > 1) array[1] else array[0])
     }
@@ -37,17 +37,17 @@ abstract class RangeDeserializer<T, R : Range<T>> : JsonDeserializer<R>() {
     abstract fun create(start: T, end: T): R
 }
 
-class DateTimeRangeDeserializer : RangeDeserializer<LocalDateTime, DateTimeRange>() {
+class DateTimeRangeDeserializer : RangeDeserializer<LocalDateTime, DateTimeTimeRange>() {
     override fun getType(): Class<Array<LocalDateTime>> = Array<LocalDateTime>::class.java
 
-    override fun create(start: LocalDateTime, end: LocalDateTime): DateTimeRange = DateTimeRange(start, end)
+    override fun create(start: LocalDateTime, end: LocalDateTime): DateTimeTimeRange = DateTimeTimeRange(start, end)
 }
 
 
-abstract class RangeSerializer<T> : JsonSerializer<Range<T>>() {
+abstract class RangeSerializer<T> : JsonSerializer<TimeRange<T>>() {
 
     abstract val type: Class<T>
-    override fun serialize(value: Range<T>?, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: TimeRange<T>?, gen: JsonGenerator, provider: SerializerProvider) {
         value?.apply {
             provider.findValueSerializer(type)?.let {
                 gen.writeStartArray()

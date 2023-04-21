@@ -1,4 +1,4 @@
-package com.daiwenzh5.kt.time
+package io.github.daiwenzh5.kt.time
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

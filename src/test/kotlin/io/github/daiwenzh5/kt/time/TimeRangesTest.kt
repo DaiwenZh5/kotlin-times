@@ -1,4 +1,4 @@
-package com.daiwenzh5.kt.time
+package io.github.daiwenzh5.kt.time
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
@@ -22,19 +22,19 @@ internal class TimeRangesTest {
 
     @Test
     fun `test equals`() {
-        val dateTimeRange = DateTimeRange(
+        val dateTimeRange = DateTimeTimeRange(
             LocalDateTime.of(2023, 4, 19, 0, 0, 0),
             LocalDateTime.of(2023, 4, 19, 23, 59, 59),
         )
         assertEquals(
-            DateTimeRange(
+            DateTimeTimeRange(
                 LocalDateTime.of(2023, 4, 19, 0, 0, 0),
                 LocalDateTime.of(2023, 4, 19, 23, 59, 59),
             ), dateTimeRange
         )
 
         assertNotEquals(
-            DateTimeRange(
+            DateTimeTimeRange(
                 LocalDateTime.of(2023, 4, 19, 0, 0, 0),
                 LocalDateTime.of(2023, 4, 20, 23, 59, 59),
             ), dateTimeRange
@@ -43,7 +43,7 @@ internal class TimeRangesTest {
 
     @Test
     fun `test  toString`() {
-        val dateTimeRange = DateTimeRange(
+        val dateTimeRange = DateTimeTimeRange(
             LocalDateTime.of(2023, 4, 19, 0, 0, 0),
             LocalDateTime.of(2023, 4, 19, 23, 59, 59),
         )
@@ -70,13 +70,13 @@ internal class TimeRangesTest {
                 "2020-03-27 18:00:00"
                 ]"""
             assertDoesNotThrow {
-                objectMapper.readValue(json, DateTimeRange::class.java)
+                objectMapper.readValue(json, DateTimeTimeRange::class.java)
             }
         }
 
         @Test
         fun `test with serialize`() {
-            val dateTimeRange = DateTimeRange(
+            val dateTimeRange = DateTimeTimeRange(
                 LocalDateTime.of(2023, 4, 19, 0, 0, 0),
                 LocalDateTime.of(2023, 4, 19, 23, 59, 59),
             )
@@ -108,7 +108,7 @@ internal class TimeRangesTest {
         @Test
         fun `test range of day`() {
             assertEquals(
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 19, 0, 0, 0),
                     LocalDateTime.of(2023, 4, 19, 23, 59, 59, 999999999)
                 ),
@@ -119,11 +119,11 @@ internal class TimeRangesTest {
         @Test
         fun `test fixed of day`() {
             assertEquals(
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 19, 0, 0, 0),
                     LocalDateTime.of(2023, 4, 19, 23, 59, 59, 999999999)
                 ),
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 19, 11, 0, 0),
                     LocalDateTime.of(2023, 4, 19, 11, 59, 59)
                 ).fixedOfDay()
@@ -149,7 +149,7 @@ internal class TimeRangesTest {
         @Test
         fun `test range of month`() {
             assertEquals(
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 1, 0, 0, 0),
                     LocalDateTime.of(2023, 4, 30, 23, 59, 59, 999999999)
                 ),
@@ -160,11 +160,11 @@ internal class TimeRangesTest {
         @Test
         fun `test fixed of month`() {
             assertEquals(
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 1, 0, 0, 0),
                     LocalDateTime.of(2023, 4, 30, 23, 59, 59, 999999999)
                 ),
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 19, 11, 0, 0),
                     LocalDateTime.of(2023, 4, 19, 11, 59, 59)
                 ).fixedOfMonth()
@@ -194,7 +194,7 @@ internal class TimeRangesTest {
         @Test
         fun `test fixed of day`() {
             assertEquals(
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 19, 0, 0, 0),
                     LocalDateTime.of(2023, 4, 19, 23, 59, 59, 999999999)
                 ),
@@ -223,7 +223,7 @@ internal class TimeRangesTest {
         @Test
         fun `test range of Month`() {
             assertEquals(
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 1, 0, 0, 0),
                     LocalDateTime.of(2023, 4, 30, 23, 59, 59, 999999999)
                 ),
@@ -234,7 +234,7 @@ internal class TimeRangesTest {
         @Test
         fun `test fixed of Month`() {
             assertEquals(
-                DateTimeRange(
+                DateTimeTimeRange(
                     LocalDateTime.of(2023, 4, 1, 0, 0, 0),
                     LocalDateTime.of(2023, 4, 30, 23, 59, 59, 999999999)
                 ),

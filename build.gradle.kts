@@ -1,13 +1,15 @@
+
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.net.URI
 
 plugins {
     kotlin("jvm") version "1.8.20"
     `maven-publish`
+    signing
 }
 
-group = "com.daiwenzh5.kt"
-version = "1.0-SNAPSHOT"
+group = "io.github.daiwenzh5.kt"
+version = "1.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -33,11 +35,7 @@ kotlin {
 
 java {
     withSourcesJar()
-}
-
-val sourceJar by tasks.register("sourceJar", Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
+    withJavadocJar()
 }
 
 ext {
@@ -51,6 +49,10 @@ ext {
     }
 }
 
+signing {
+    sign("publishing.publications.mavenJava")
+}
+
 publishing {
     repositories {
         maven {
@@ -60,9 +62,20 @@ publishing {
                 "https://packages.aliyun.com/maven/repository/",
             )
             credentials {
-                println("ext is ${ext.properties}")
                 username = propOf("ALIYUN_USERNAME")
                 password = propOf("ALIYUN_TOKEN")
+            }
+        }
+        maven {
+            name = "OSSRH"
+            url = repositoryUri(
+                "service/local/staging/deploy/maven2/",
+                "content/repositories/snapshots/",
+                "https://s01.oss.sonatype.org/"
+            )
+            credentials {
+                username = propOf("OSSRH_USERNAME")
+                password = propOf("OSSRH_PASSWORD")
             }
         }
     }
@@ -70,10 +83,9 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["kotlin"])
-            // 添加源码 JAR 到构件中
-            artifact(sourceJar) {
-                classifier = "sources"
-            }
+            // 添加源码、javadoc JAR 到构件中
+            artifact(tasks["sourcesJar"])
+            artifact(tasks["javadocJar"])
         }
     }
 }
