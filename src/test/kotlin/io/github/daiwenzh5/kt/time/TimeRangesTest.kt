@@ -65,12 +65,12 @@ internal class TimeRangesTest {
 
         @Test
         fun `test with deserialize`() {
-            val json = """[
+            assertDoesNotThrow {
+                objectMapper.readValue("""[
                 "2020-03-27 17:00:00",
                 "2020-03-27 18:00:00"
-                ]"""
-            assertDoesNotThrow {
-                objectMapper.readValue(json, DateTimeTimeRange::class.java)
+                ]""", DateTimeTimeRange::class.java)
+                objectMapper.readValue("[]", DateTimeTimeRange::class.java)
             }
         }
 

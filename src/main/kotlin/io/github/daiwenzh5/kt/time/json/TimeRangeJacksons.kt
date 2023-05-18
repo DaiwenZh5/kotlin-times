@@ -1,14 +1,11 @@
 package io.github.daiwenzh5.kt.time.json
 
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.*
 import io.github.daiwenzh5.kt.time.DateRange
 import io.github.daiwenzh5.kt.time.DateTimeTimeRange
 import io.github.daiwenzh5.kt.time.TimeRange
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.JsonSerializer
-import com.fasterxml.jackson.databind.SerializerProvider
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -24,10 +21,10 @@ import java.time.LocalDateTime
  * 日期时间范围
  */
 abstract class RangeDeserializer<T, R : TimeRange<T>> : JsonDeserializer<R>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): R {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): R? {
         val array = p.readValueAs(getType())
         if (array.isEmpty()) {
-            throw TimeConvertException("TimeRange must contain at least one value!")
+            return null
         }
         return create(array[0], if (array.size > 1) array[1] else array[0])
     }
